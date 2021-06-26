@@ -1,0 +1,27 @@
+cd $HOME
+
+# Only first step if not done yet.
+    python3 -m venv venv
+
+source venv/bin/activate
+
+cd /eno/media/src/seqLister
+
+python -m build
+
+# Change next line to whatever latest version is. Then use
+# __token__ and password saved in "1Password" under PyPi entry.
+# ...or not needed if .pypirc is installed in $HOME
+#
+python3 -m twine upload --repository pypi dist/seqLister-0.0.1*
+
+# Then test it.
+
+# New installation.
+    python3 -m pip install --index-url https://pypi.org/simple/ --no-deps seqLister
+# ...or update...
+    python3 -m pip install --index-url https://pypi.org/simple/ --no-deps seqLister --upgrade
+
+cd tests
+python3 testSeqLister.py > testSeqLister.out.new
+diff testSeqLister.out testSeqLister.out.new
