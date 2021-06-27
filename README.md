@@ -1,10 +1,7 @@
 # About seqLister
 
-`seqLister` is a python package to help (docn coming - wip)
+`seqLister` is a python library for expanding and condensing integer-sequences using a simple syntax widely used within the VFX-industry for specifying frame-ranges.
 
 ## How to install the seqLister module on your system.
 
-To install these commands on your system follow these steps (you need root
-privileges).
-
-1)  tbd (wip)
+python3 -m pip install seqLister
