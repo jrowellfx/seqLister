@@ -74,8 +74,8 @@ of frame numbers, simply as numbers and not strange sequences.
 Eg. seqLister.condenseSeq(seqLister.expandSeq(["0-100x2", 51])) returns   
 ['0-50x2', '51', '52-100x2']
 
-and seqLister.condenseSeq([1, 5, 13]), returns  
-['1', '5', '13']
+and seqLister.condenseSeq([1, 5, 13], 2), returns  
+['01', '05', '13']
 
 Other examples:
 
