@@ -18,9 +18,11 @@ python3 -m twine upload --repository pypi dist/seqLister-0.0.1*
 # Then test it.
 
 # New installation.
-    python3 -m pip install --index-url https://pypi.org/simple/ --no-deps seqLister
+    # python3 -m pip install --index-url https://pypi.org/simple/ --no-deps seqLister
+    python3 -m pip install --no-deps seqLister
 # ...or update...
-    python3 -m pip install --index-url https://pypi.org/simple/ --no-deps seqLister --upgrade
+    # python3 -m pip install --index-url https://pypi.org/simple/ --no-deps seqLister --upgrade
+    python3 -m pip install --no-deps seqLister --upgrade
 
 cd tests
 python3 testSeqLister.py > testSeqLister.out.new
