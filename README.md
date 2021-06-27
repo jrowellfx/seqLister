@@ -29,16 +29,16 @@ Expands and returns the argument 'seqList' as a list of integers.
 or a list of integers and/or
 strings of the following format (with examples):
 
--   individual frame numbers: [1, "4", 10, 15]  
-    returns [1, 4, 10, 15]
--   sequences of successive frame numbers: ["1-4", "10-15"]  
-    returns [1, 2, 3, 4, 10, 11, 12, 13, 14, 15]
--   sequences of skipped frame numbers: ["1-10x2", "20-60x10"]  
-    returns [1, 3, 5, 7, 9, 20, 30, 40, 50, 60]
--   reverse sequences work too: ["5-1"]  
-    returns [5, 4, 3, 2, 1]
--   as do negative numbers: ["-10--3"]  
-    returns [-10, -9, -8, -7, -6, -5, -4, -3]
+-   individual frame numbers: seqLister.expandSeq([1, "4", 10, 15]) returns  
+    [1, 4, 10, 15]
+-   sequences of successive frame numbers: seqLister.expandSeq(["1-4", "10-15"]) returns  
+    [1, 2, 3, 4, 10, 11, 12, 13, 14, 15]
+-   sequences of skipped frame numbers: seqLister.expandSeqd(["1-10x2", "20-60x10"]) returns  
+    [1, 3, 5, 7, 9, 20, 30, 40, 50, 60]
+-   reverse sequences work too: seqLister.expandSeq(["5-1"]) returns  
+    [5, 4, 3, 2, 1]
+-   as do negative numbers: seqLister.expandSeq(["-10--3"]) returns
+    [-10, -9, -8, -7, -6, -5, -4, -3]
 
 The above formats may be listed in any order, but if a number has
 been listed once, it will not be listed again.
@@ -55,7 +55,9 @@ The returned list of integers is NOT sorted.
 ### condenseSeq(seqList, pad=1)
 
 Takes a list of numbers and condenses it into the most minimal
-form using the notation described in 'expandSeq()' above.
+form using the notation described in 'expandSeq()' above. Since the returned 
+list is a list of strings, then you can specify the padding of the integers with
+the optional pad argument.
 
 Examples:  
 
@@ -77,14 +79,16 @@ and seqLister.condenseSeq([1, 5, 13]), returns
 
 Other examples:
 
-seqLister.condenseSeq([1, 1, 1, 3, 3, 5, 5, 5]), returns  
+seqLister.condenseSeq([1, 1, 1, 3, 3, 5, 5, 5]) returns  
 ['1-5x2']
-seqLister.condenseSeq([1, 2, 3, 4, 6, 8, 10]), returns  
+
+seqLister.condenseSeq([1, 2, 3, 4, 6, 8, 10]) returns  
 ['1-4', '6-10x2']
-seqLister.condenseSeq([1, 2, 3, 4, 6, 8]), returns  
+
+seqLister.condenseSeq([1, 2, 3, 4, 6, 8]) returns  
 ['1-4', '6', '8']
 
-condenseSeq(expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7", "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"])), returns  
+condenseSeq(expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7", "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"])) returns  
 ['2-28', '30', '32-36', '38-40', '42', '44-46', '48-50']
 
 ### condenseSeqOnes(seqList, pad=1)
@@ -95,9 +99,9 @@ to a range (A-B) if and only if the numbers are successive.
 
 Examples:
 
-seqLister.condenseSeqOnes([2, 1, 3, 7, 8, 4, 5, 6, 9, 10]), returns   
+seqLister.condenseSeqOnes([2, 1, 3, 7, 8, 4, 5, 6, 9, 10]) returns   
 ['1-10']
 
-seqLister.condenseSeqOnes([0, 8, 16, 2, 4, 6, 10, 12, 14]), returns   
+seqLister.condenseSeqOnes([0, 8, 16, 2, 4, 6, 10, 12, 14]) returns   
 ['0', '2', '4', '6', '8', '10', '12', '14', '16']
 
