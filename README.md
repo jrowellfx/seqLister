@@ -37,7 +37,7 @@ strings of the following format (with examples):
     [1, 3, 5, 7, 9, 20, 30, 40, 50, 60]
 -   reverse sequences work too: seqLister.expandSeq(["5-1"]) returns  
     [5, 4, 3, 2, 1]
--   as do negative numbers: seqLister.expandSeq(["-10--3"]) returns
+-   as do negative numbers: seqLister.expandSeq(["-10--3"]) returns  
     [-10, -9, -8, -7, -6, -5, -4, -3]
 
 The above formats may be listed in any order, but if a number has
@@ -55,7 +55,7 @@ The returned list of integers is NOT sorted.
 ### condenseSeq(seqList, pad=1)
 
 Takes a list of numbers and condenses it into the most minimal
-form using the notation described in 'expandSeq()' above. Since the returned 
+form using the syntax described in 'expandSeq()' above. Since the returned 
 list is a list of strings, then you can specify the padding of the integers with
 the optional pad argument.
 
