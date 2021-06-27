@@ -30,15 +30,15 @@ or a list of integers and/or
 strings of the following format (with examples):
 
 -   individual frame numbers: [1, "4", 10, 15]  
-    returns -> [1, 4, 10, 15]
+    returns [1, 4, 10, 15]
 -   sequences of successive frame numbers: ["1-4", "10-15"]  
-    returns -> [1, 2, 3, 4, 10, 11, 12, 13, 14, 15]
+    returns [1, 2, 3, 4, 10, 11, 12, 13, 14, 15]
 -   sequences of skipped frame numbers: ["1-10x2", "20-60x10"]  
-    returns -> [1, 3, 5, 7, 9, 20, 30, 40, 50, 60]
+    returns [1, 3, 5, 7, 9, 20, 30, 40, 50, 60]
 -   reverse sequences work too: ["5-1"]  
-    returns -> [5, 4, 3, 2, 1]
+    returns [5, 4, 3, 2, 1]
 -   as do negative numbers: ["-10--3"]  
-    returns -> [-10, -9, -8, -7, -6, -5, -4, -3]
+    returns [-10, -9, -8, -7, -6, -5, -4, -3]
 
 The above formats may be listed in any order, but if a number has
 been listed once, it will not be listed again.
