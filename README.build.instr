@@ -17,7 +17,7 @@ python3 -m build
 # __token__ and password for PyPi account.
 # ...or not needed if .pypirc is installed in $HOME
 #
-python3 -m twine upload --repository pypi dist/seqLister-0.0.4*
+python3 -m twine upload --repository pypi dist/seqLister-1.0.0*
 
 # Install it,
     python3 -m pip install --no-deps seqLister
