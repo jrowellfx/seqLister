@@ -94,7 +94,7 @@ condenseSeq(expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7", "11-50x11", "13-5
 ### condenseSeqOnes(seqList, pad=1)
 
 Takes a list of numbers and condenses it into the most minimal
-form using with the restriction that sequences are compressed
+form with the restriction that sequences are compressed
 to a range (A-B) if and only if the numbers are successive.
 
 Examples:
