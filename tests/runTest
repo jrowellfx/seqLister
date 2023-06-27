@@ -1,1 +1,1 @@
-python3 testSeqLister.py | diff testSeqLister.out -
+python3 testSeqLister.py > testSeqLister.out.new

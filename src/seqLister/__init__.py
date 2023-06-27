@@ -1,6 +1,6 @@
 # BSD 3-Clause License
 #
-# Copyright (c) 2008-2022, James Philip Rowell,
+# Copyright (c) 2008-2023, James Philip Rowell,
 # Alpha Eleven Incorporated
 # www.alpha-eleven.com
 # All rights reserved.
@@ -37,6 +37,7 @@
 # seqLister module - used for expanding and condensing ranges of
 # frame numbers to/from a common format to describe such ranges.
 
+__version__ = "1.1.0"
 
 # Expands the argument 'seqList' into a list of integers.
 # 'seqList' may be a single string with the following format
@@ -212,20 +213,24 @@ def __debugPrintList(li) :
 # condenseSeq(expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7", "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"]))
 #     yeilds -> ['2-28', '30', '32-36', '38-40', '42', '44-46', '48-50']
 #
-def condenseSeq(seqList, pad=1) :
+def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 
-    # Turn seqList into all integers and throw away invalid entries
+    # Turn seqList into all integers and stash invalid entries
     #
     tmpSeqList = seqList
     seqList = []
     for n in tmpSeqList :
         if isinstance(n, int) :
             seqList.append(int(n))
-        if isinstance(n, str) :
+        elif isinstance(n, str) :
             if n.isdigit() :
                 seqList.append(int(n))
             elif n[0] == "-" and n[1:].isdigit() :
                 seqList.append(-1 * int(n))
+            else :
+                nonSeqList.append(n)
+        else :
+            nonSeqList.append(n)
 
     if len(seqList) == 0 : # Take care of 1st trivial case
         return []
@@ -343,20 +348,24 @@ def condenseSeq(seqList, pad=1) :
 # and this [0, 8, 16, 2, 4, 6, 10, 12, 14]
 #     yeilds -> [0, 2, 4, 6, 8, 10, 12, 14, 16]
 #
-def condenseSeqOnes(seqList, pad=1) :
+def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
 
-    # Turn seqList into all integers and throw away invalid entries
+    # Turn seqList into all integers and stash invalid entries
     #
     tmpSeqList = seqList
     seqList = []
     for n in tmpSeqList :
         if isinstance(n, int) :
             seqList.append(int(n))
-        if isinstance(n, str) :
+        elif isinstance(n, str) :
             if n.isdigit() :
                 seqList.append(int(n))
             elif n[0] == "-" and n[1:].isdigit() :
                 seqList.append(-1 * int(n))
+            else:
+                nonSeqList.append(n)
+        else:
+            nonSeqList.append(n)
 
     if len(seqList) == 0 : # Take care of 1st trivial case
         return []

@@ -1,6 +1,24 @@
 cd $HOME
 
-# First step if not done yet.
+# First, test any changes.
+#
+cd <dirWithGitRepos>/seqLister
+
+python3 -m venv venv_testSeqLister
+source venv_testSeqLister/bin/activate
+python3 -m pip install --upgrade pip setuptools wheel
+python3 -m pip install --upgrade build
+python3 -m pip install --upgrade twine
+
+pip install .
+
+cd tests
+
+python3 testSeqLister.py > testSeqLister.out.new
+diff testSeqLister.out testSeqLister.out.new
+
+
+# then once tested if next steps not done yet.
     python3 -m venv venv
     source venv/bin/activate
     python3 -m pip install --upgrade pip setuptools wheel
@@ -17,7 +35,7 @@ python3 -m build
 # __token__ and password for PyPi account.
 # ...or not needed if .pypirc is installed in $HOME
 #
-python3 -m twine upload --repository pypi dist/seqLister-1.0.0*
+python3 -m twine upload --repository pypi dist/seqLister-1.1.0*
 
 # Install it,
     python3 -m pip install --no-deps seqLister

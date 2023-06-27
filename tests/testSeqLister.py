@@ -1,8 +1,12 @@
 import seqLister
 
 nonSeqList = []
+print("seqLister version: ", seqLister.__version__)
+print("")
 
 print("Testing expandSeq()")
+
+
 print(seqLister.expandSeq(1, nonSeqList))
 print(seqLister.expandSeq(1))
 print(seqLister.expandSeq([1, "004", 10, 15], nonSeqList))

@@ -48,11 +48,11 @@ Eg. seqLister.expandSeq(["0-16x8", "0-16x2"]) returns
 
 Anything that is not of the above format is ignored for
 the purposes of building the list of integers and the ignored
-item is appended to the optional argument "nonSeqList".
+items are appended to the optional argument "nonSeqList".
 
 The returned list of integers is NOT sorted.
 
-### condenseSeq(seqList, pad=1)
+### condenseSeq(seqList, pad=1, nonSeqList=[])
 
 Takes a list of numbers and condenses it into the most minimal
 form using the syntax described in 'expandSeq()' above. Since the returned 
@@ -91,6 +91,10 @@ seqLister.condenseSeq([1, 2, 3, 4, 6, 8]) returns
 condenseSeq(expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7", "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"])) returns  
 ['2-28', '30', '32-36', '38-40', '42', '44-46', '48-50']
 
+Anything in seqList that is not an integer is ignored for
+the purposes of condensing the list of integers and the ignored
+items are appended to the optional argument "nonSeqList".
+
 ### condenseSeqOnes(seqList, pad=1)
 
 Takes a list of numbers and condenses it into the most minimal
@@ -105,3 +109,7 @@ seqLister.condenseSeqOnes([2, 1, 3, 7, 8, 4, 5, 6, 9, 10]) returns
 seqLister.condenseSeqOnes([0, 8, 16, 2, 4, 6, 10, 12, 14]) returns   
 ['0', '2', '4', '6', '8', '10', '12', '14', '16']
 
+As with condenseSeq,
+anything in seqList that is not an integer is ignored for
+the purposes of condensing the list of integers and the ignored
+items are appended to the optional argument "nonSeqList".
