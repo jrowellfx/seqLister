@@ -219,6 +219,8 @@ def __debugPrintList(li) :
 #
 def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 
+    condensedList = []
+
     # Turn seqList into all integers and stash invalid entries
     #
     tmpSeqList = seqList
@@ -237,7 +239,7 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
             nonSeqList.append(n)
 
     if len(seqList) == 0 : # Take care of 1st trivial case
-        return []
+        return condensedList
 
     # Remove duplicates
     #
@@ -253,7 +255,8 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
     formatStr = "%0" + str(pad) + "d"
 
     if len(seqList) == 1 : # Take care of second trivial case.
-        return [formatStr % seqList[0]]
+        condensedList.append(formatStr % seqList[0])
+        return condensedList
 
     # At this point - guaranteed that len(seqList) > 1
 
@@ -354,6 +357,8 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 #
 def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
 
+    condensedList = []
+
     # Turn seqList into all integers and stash invalid entries
     #
     tmpSeqList = seqList
@@ -372,7 +377,7 @@ def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
             nonSeqList.append(n)
 
     if len(seqList) == 0 : # Take care of 1st trivial case
-        return []
+        return condensedList
 
     # Remove duplicates
     #
@@ -388,7 +393,8 @@ def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
     formatStr = "%0" + str(pad) + "d"
 
     if len(seqList) == 1 : # Take care of second trivial case.
-        return [formatStr % seqList[0]]
+        condensedList.append(formatStr % seqList[0])
+        return condensedList
 
     # At this point - guaranteed that len(seqList) > 1
 

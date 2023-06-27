@@ -1,4 +1,3 @@
-cd $HOME
 
 # First, test any changes.
 #
@@ -17,8 +16,11 @@ cd tests
 python3 testSeqLister.py > testSeqLister.out.new
 diff testSeqLister.out testSeqLister.out.new
 
+# THEN once tested and verified passed etc
 
-# then once tested if next steps not done yet.
+cd $HOME
+
+# if next steps not done yet.
     python3 -m venv venv
     source venv/bin/activate
     python3 -m pip install --upgrade pip setuptools wheel
