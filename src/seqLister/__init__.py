@@ -37,6 +37,10 @@
 # seqLister module - used for expanding and condensing ranges of
 # frame numbers to/from a common format to describe such ranges.
 
+# MAJOR version for incompatible API changes
+# MINOR version for added functionality in a backwards compatible manner
+# PATCH version for backwards compatible bug fixes
+#
 __version__ = "1.1.0"
 
 # Expands the argument 'seqList' into a list of integers.
