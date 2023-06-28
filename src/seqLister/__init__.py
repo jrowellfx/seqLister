@@ -108,7 +108,7 @@ def expandSeq(seqList, nonSeqList=[]) :
                 nonSeqList.append(origItem)
                 continue
             stepValue = int(lastItem[1])
-            seqItemList[-1] = lastItem[0] # Stick back in list minus "xN" part
+            seqItemList[-1] = lastItem[0] # Stick last element back in the list w/o "xN" part
 
         if seqItemList[0] == "" : # Means there was leading minus sign.
             seqItemList.pop(0)
@@ -120,7 +120,7 @@ def expandSeq(seqList, nonSeqList=[]) :
                 continue
             seqItemList[0] = -1 * int(seqItemList[0]) # Repace first entry...
         elif seqItemList[0].isdigit() :
-            seqItemList[0] = int(seqItemList[0]) #...with an ingeter.
+            seqItemList[0] = int(seqItemList[0]) #...with an integer.
         else :
             nonSeqList.append(origItem)
             continue
