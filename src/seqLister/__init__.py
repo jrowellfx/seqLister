@@ -232,7 +232,7 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
             if n.isdigit() :
                 seqList.append(int(n))
             elif n[0] == "-" and n[1:].isdigit() :
-                seqList.append(-1 * int(n))
+                seqList.append(-1 * int(n[1:]))
             else :
                 nonSeqList.append(n)
         else :
@@ -370,7 +370,7 @@ def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
             if n.isdigit() :
                 seqList.append(int(n))
             elif n[0] == "-" and n[1:].isdigit() :
-                seqList.append(-1 * int(n))
+                seqList.append(-1 * int(n[1:]))
             else:
                 nonSeqList.append(n)
         else:

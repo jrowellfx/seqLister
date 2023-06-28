@@ -122,3 +122,6 @@ print(seqLister.condenseSeq(tmpList))
 
 tmpList = seqLister.expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7", "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"], nonSeqList)
 print(seqLister.condenseSeq(tmpList))
+
+print(seqLister.condenseSeq([-10, -9, -8, -7, -5, -4, -3, -2, -1], 1))
+print(seqLister.condenseSeq(['-10', '-9', '-8', '-7', '-5', '-4', '-3', '-2', '-1']))
