@@ -6,7 +6,6 @@ print("")
 
 print("Testing expandSeq()")
 
-
 print(seqLister.expandSeq(1, nonSeqList))
 print(seqLister.expandSeq(1))
 print(seqLister.expandSeq([1, "004", 10, 15], nonSeqList))
@@ -29,28 +28,28 @@ print(seqLister.expandSeq(["0-6", "6-14x2", "14-70x10"], nonSeqList))
 print(seqLister.expandSeq(["0-64x64", "0-64x32", "0-64x16", "0-64x8", "0-64x4", "0-64x2", "0-64"], nonSeqList))
 print(seqLister.expandSeq(["-20--5"], nonSeqList))
 print(seqLister.expandSeq(["-10--3"], nonSeqList))
-print(nonSeqList)
+print("nonSeqList=",nonSeqList)
 nonSeqList = []
 print(seqLister.expandSeq(["1-6-12"], nonSeqList)) # invalid
-print(nonSeqList)
+print("nonSeqList=",nonSeqList)
 nonSeqList = []
 print(seqLister.expandSeq(["1---6"], nonSeqList)) # invalid
-print(nonSeqList)
+print("nonSeqList=",nonSeqList)
 nonSeqList = []
 print(seqLister.expandSeq(["1-6xa"], nonSeqList)) # invalid
-print(nonSeqList)
+print("nonSeqList=",nonSeqList)
 nonSeqList = []
 print(seqLister.expandSeq(["1-6x2-"], nonSeqList)) # invalid
-print(nonSeqList)
+print("nonSeqList=",nonSeqList)
 nonSeqList = []
 print(seqLister.expandSeq(["a-b"], nonSeqList)) # invalid
-print(nonSeqList)
+print("nonSeqList=",nonSeqList)
 nonSeqList = []
 print(seqLister.expandSeq(["10--10x--2"], nonSeqList)) # invalid
-print(nonSeqList)
+print("nonSeqList=",nonSeqList)
 nonSeqList = []
 print(seqLister.expandSeq(["1-5", "8-a"], nonSeqList)) # partially invalid
-print(nonSeqList)
+print("nonSeqList=",nonSeqList)
 nonSeqList = []
 
 print()
@@ -122,6 +121,11 @@ print(seqLister.condenseSeq(tmpList))
 
 tmpList = seqLister.expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7", "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"], nonSeqList)
 print(seqLister.condenseSeq(tmpList))
+
+nonSeqList = []
+print(seqLister.condenseSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7", "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"], nonSeqList=nonSeqList))
+print("nonSeqList=",nonSeqList)
+nonSeqList = []
 
 print(seqLister.condenseSeq([-10, -9, -8, -7, -5, -4, -3, -2, -1], 1))
 print(seqLister.condenseSeq(['-10', '-9', '-8', '-7', '-5', '-4', '-3', '-2', '-1']))
