@@ -39,13 +39,19 @@ python3 -m build
 #
 python3 -m twine upload --repository pypi dist/seqLister-1.1.0*
 
-# Install it,
-    python3 -m pip install --no-deps seqLister
-# or update it.
-    python3 -m pip install --no-deps seqLister --upgrade
+su -
+cd /usr/local/venv/
+source bin/activate
+python3 -m pip install --upgrade pip
+deactivate
+bin/pip install --upgrade seqLister
+exit
 
 # Test installation.
 #
+cd /usr/local/venv/
+source bin/activate
+cd <dirWithGitRepos>/seqLister
 cd tests
 python3 testSeqLister.py > testSeqLister.out.new
 diff testSeqLister.out testSeqLister.out.new
