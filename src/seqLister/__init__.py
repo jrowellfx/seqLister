@@ -41,7 +41,7 @@
 # MINOR version for added functionality in a backwards compatible manner
 # PATCH version for backwards compatible bug fixes
 #
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 # Expands the argument 'seqList' into a list of integers.
 # 'seqList' may be a single string with the following format
@@ -73,6 +73,8 @@ __version__ = "1.1.0"
 #
 def expandSeq(seqList, nonSeqList=[]) :
 
+    nonSeqList.clear()
+
     if not isinstance(seqList, list) :
         tmp=seqList
         seqList = [tmp]
@@ -91,81 +93,94 @@ def expandSeq(seqList, nonSeqList=[]) :
             continue
 
         stepValue = 1
-        seqItem = seqItem.replace(" ", "") # Strip all whitespace.
-        seqItem = seqItem.replace("     ", "")
 
-        # No stepping by negative numbers - step back by reversing start/end
-        seqItem = seqItem.replace("x-", "x")
+        # Turn any embedded commas and tabs into spaces.
+        # Then split the seqItem into separate items if containing
+        # spaces which allows, for a looser interpretation of
+        # what can be in passed to us here via seqList.
+        #
+        # For example these lists are treated the same in this function:
+        #    ['1', '2', '3', '4'] == ['1 2,3', '4']
+        #
+        seqItem = seqItem.replace(",", " ")
+        splitSeqItem = seqItem.split() # Treats consecutive whitespace as one separator.
 
-        seqItemList = seqItem.split("-") # might be range or neg number.
+        for seqItem in splitSeqItem :
 
-        if "x" in seqItemList[-1] :
-            lastItem = seqItemList[-1].split("x")
-            if len(lastItem) != 2 :
+            # No stepping by negative numbers - step back by reversing start/end
+            # This next step is equivalent to taking the absolute value of "x"
+            #
+            seqItem = seqItem.replace("x-", "x")
+
+            seqItemList = seqItem.split("-") # might be range or neg number.
+
+            if "x" in seqItemList[-1] :
+                lastItem = seqItemList[-1].split("x")
+                if len(lastItem) != 2 :
+                    nonSeqList.append(origItem)
+                    continue
+                if not lastItem[1].isdigit() :
+                    nonSeqList.append(origItem)
+                    continue
+                stepValue = int(lastItem[1])
+                seqItemList[-1] = lastItem[0] # Stick last element back in the list w/o "xN" part
+
+            if seqItemList[0] == "" : # Means there was leading minus sign.
+                seqItemList.pop(0)
+                if len(seqItemList) == 0:
+                    nonSeqList.append(origItem)
+                    continue
+                if not seqItemList[0].isdigit() :
+                    nonSeqList.append(origItem)
+                    continue
+                seqItemList[0] = -1 * int(seqItemList[0]) # Repace first entry...
+            elif seqItemList[0].isdigit() :
+                seqItemList[0] = int(seqItemList[0]) #...with an integer.
+            else :
                 nonSeqList.append(origItem)
                 continue
-            if not lastItem[1].isdigit() :
+
+            if len(seqItemList) == 1 : # Was just string with one number in it.
+                if seqItemList[0] not in resultList :
+                    resultList.append(seqItemList[0])
+                continue
+
+            if seqItemList[1] == "" : # Same as above for next entry.
+                seqItemList.pop(1)
+                if len(seqItemList) == 1:
+                    nonSeqList.append(origItem)
+                    continue
+                if not seqItemList[1].isdigit() :
+                    nonSeqList.append(origItem)
+                    continue
+                seqItemList[1] = -1 * int(seqItemList[1])
+            elif seqItemList[1].isdigit() :
+                seqItemList[1] = int(seqItemList[1])
+            else :
                 nonSeqList.append(origItem)
                 continue
-            stepValue = int(lastItem[1])
-            seqItemList[-1] = lastItem[0] # Stick last element back in the list w/o "xN" part
 
-        if seqItemList[0] == "" : # Means there was leading minus sign.
-            seqItemList.pop(0)
-            if len(seqItemList) == 0:
+            # Should only be exactly two entries at this point.
+            if len(seqItemList) != 2 :
                 nonSeqList.append(origItem)
                 continue
-            if not seqItemList[0].isdigit() :
-                nonSeqList.append(origItem)
-                continue
-            seqItemList[0] = -1 * int(seqItemList[0]) # Repace first entry...
-        elif seqItemList[0].isdigit() :
-            seqItemList[0] = int(seqItemList[0]) #...with an integer.
-        else :
-            nonSeqList.append(origItem)
-            continue
 
-        if len(seqItemList) == 1 : # Was just string with one number in it.
-            if seqItemList[0] not in resultList :
-                resultList.append(seqItemList[0])
-            continue
-
-        if seqItemList[1] == "" : # Same as above for next entry.
-            seqItemList.pop(1)
-            if len(seqItemList) == 1:
-                nonSeqList.append(origItem)
-                continue
-            if not seqItemList[1].isdigit() :
-                nonSeqList.append(origItem)
-                continue
-            seqItemList[1] = -1 * int(seqItemList[1])
-        elif seqItemList[1].isdigit() :
-            seqItemList[1] = int(seqItemList[1])
-        else :
-            nonSeqList.append(origItem)
-            continue
-
-        # Should only be exactly two entries at this point.
-        if len(seqItemList) != 2 :
-            nonSeqList.append(origItem)
-            continue
-
-        # Ummm - dumb but why not? list from n to n, i.e., one number.
-        if seqItemList[0] == seqItemList[1] :
-            if seqItemList[0] not in resultList :
-                resultList.append(seqItemList[0])
-        elif seqItemList[0] < seqItemList[1] : # Counting up.
-            frameNum = seqItemList[0]
-            while frameNum <= seqItemList[1] :
-                if frameNum not in resultList :
-                    resultList.append(frameNum)
-                frameNum =  frameNum + stepValue
-        else : # Counting down.
-            frameNum = seqItemList[0]
-            while frameNum >= seqItemList[1] :
-                if frameNum not in resultList :
-                    resultList.append(frameNum)
-                frameNum =  frameNum - stepValue
+            # Ummm - dumb but why not? list from n to n, i.e., one number.
+            if seqItemList[0] == seqItemList[1] :
+                if seqItemList[0] not in resultList :
+                    resultList.append(seqItemList[0])
+            elif seqItemList[0] < seqItemList[1] : # Counting up.
+                frameNum = seqItemList[0]
+                while frameNum <= seqItemList[1] :
+                    if frameNum not in resultList :
+                        resultList.append(frameNum)
+                    frameNum =  frameNum + stepValue
+            else : # Counting down.
+                frameNum = seqItemList[0]
+                while frameNum >= seqItemList[1] :
+                    if frameNum not in resultList :
+                        resultList.append(frameNum)
+                    frameNum =  frameNum - stepValue
 
     return resultList
 
@@ -221,6 +236,8 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 
     condensedList = []
 
+    nonSeqList.clear()
+
     # Turn seqList into all integers and stash invalid entries
     #
     tmpSeqList = seqList
@@ -229,12 +246,16 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
         if isinstance(n, int) :
             seqList.append(int(n))
         elif isinstance(n, str) :
-            if n.isdigit() :
-                seqList.append(int(n))
-            elif n[0] == "-" and n[1:].isdigit() :
-                seqList.append(-1 * int(n[1:]))
-            else :
-                nonSeqList.append(n)
+            ## print("DEBUG: ", n)
+            n = n.replace(",", " ")
+            nSplit = n.split()
+            for n in nSplit :
+                if n.isdigit() :
+                    seqList.append(int(n))
+                elif n[0] == "-" and n[1:].isdigit() :
+                    seqList.append(-1 * int(n[1:]))
+                else :
+                    nonSeqList.append(n)
         else :
             nonSeqList.append(n)
 
@@ -359,6 +380,8 @@ def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
 
     condensedList = []
 
+    nonSeqList.clear()
+
     # Turn seqList into all integers and stash invalid entries
     #
     tmpSeqList = seqList
@@ -367,12 +390,15 @@ def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
         if isinstance(n, int) :
             seqList.append(int(n))
         elif isinstance(n, str) :
-            if n.isdigit() :
-                seqList.append(int(n))
-            elif n[0] == "-" and n[1:].isdigit() :
-                seqList.append(-1 * int(n[1:]))
-            else:
-                nonSeqList.append(n)
+            n = n.replace(",", " ")
+            nSplit = n.split()
+            for n in nSplit :
+                if n.isdigit() :
+                    seqList.append(int(n))
+                elif n[0] == "-" and n[1:].isdigit() :
+                    seqList.append(-1 * int(n[1:]))
+                else:
+                    nonSeqList.append(n)
         else:
             nonSeqList.append(n)
 
