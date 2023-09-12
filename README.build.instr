@@ -1,4 +1,3 @@
-
 # First, test any changes.
 #
 cd <dirWithGitRepos>/seqLister
@@ -15,6 +14,18 @@ cd tests
 
 python3 testSeqLister.py > testSeqLister.out.new
 diff testSeqLister.out testSeqLister.out.new
+
+# For testing and code-dev
+#
+make sure the VERSION is set properly in src/seqLister/__init__.py
+
+    Given a version number MAJOR.MINOR.PATCH, increment the:
+
+    MAJOR version for incompatible API changes
+    MINOR version for added functionality in a backwards compatible manner
+    PATCH version for backwards compatible bug fixes
+
+and matching version number in setup.cfg
 
 # THEN once tested and verified passed etc
 
