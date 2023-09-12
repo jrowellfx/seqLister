@@ -66,3 +66,8 @@ cd <dirWithGitRepos>/seqLister
 cd tests
 python3 testSeqLister.py > testSeqLister.out.new
 diff testSeqLister.out testSeqLister.out.new
+
+CHECK IN AN COMMIT ALL CHANGES AND PUSH UP TO GITHUB
+
+MAKE NEW RELEASE to match VERSION
+
