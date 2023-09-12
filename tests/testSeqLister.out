@@ -3,8 +3,10 @@ seqLister version:  1.1.1
 Testing expandSeq()
 
 [1]
-badArgs:  []
 [1]
+badArgs:  []
+[1, 2, 3, 4, 5]
+badArgs:  []
 [1, 4, 10, 15]
 badArgs:  []
 [1, 4, 10, 15, 20, 30, 35]
