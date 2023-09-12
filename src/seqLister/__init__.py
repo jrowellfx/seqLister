@@ -34,8 +34,27 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-# seqLister module - used for expanding and condensing ranges of
-# frame numbers to/from a common format to describe such ranges.
+# seqLister is a python library for expanding and condensing
+# integer-sequences using a simple syntax widely used within
+# the VFX-industry for specifying frame-ranges.
+#
+# Definition: 'Frame-Range'.
+#
+# Given that 'A', 'B' and 'N' are integers, the syntax
+# for specifying an integer sequence used to describe
+# a frame-ranges is one of the following three cases:
+#
+#    'A'     just the integer A.
+#
+#    'A-B'   all the integers from A to B inclusive.
+# 
+#    'A-BxN' every Nth integer starting at A and increasing
+#            to be no larger than B when A < B, or descending
+#            to be no less than B when A > B.
+#
+# The above three cases may often be combined to describe 
+# less regular lists of Frame-Ranges by concatenating one
+# Frame-Range after another separated by spaces or commas.
 
 # MAJOR version for incompatible API changes
 # MINOR version for added functionality in a backwards compatible manner
@@ -43,37 +62,49 @@
 #
 __version__ = "1.2.0"
 
-# Expands the argument 'seqList' into a list of integers.
-# 'seqList' may be a single string with the following format
-# (see description below), or a list of integers and/or
-# strings of the following format:
+# expandseq() - Expands the argument 'seqList' into a list of integers.
 #
-# individual frame numbers: [1, "4", 10, 15]
-#     yeilds -> [1, 4, 10, 15]
-# sequences of successive frame numbers: ["1-4", "10-15"]
-#     yeilds -> [1, 2, 3, 4, 10, 11, 12, 13, 14, 15]
-# sequences of skipped frame numbers: ["1-10x2", "20-60x10"]
-#     yeilds -> [1, 3, 5, 7, 9, 20, 30, 40, 50, 60]
-# reverse sequences work too: ["5-1"]
-#     yeilds -> [5, 4, 3, 2, 1]
-# as do negative numbers: ["-10--3"]
-#     yeilds -> [-10, -9, -8, -7, -6, -5, -4, -3]
+# 'seqList' may be a single string or int, or a list of ints
+# and/or strings. The strings must contain Frame-Ranges
+# (syntax described above). If a string contains more than
+# one Frame-Range they must be separated by whitespace or a comma.
+#
+# Examples,
+#
+# individual frame numbers:
+#     expandseq([1, "4", 10, 15])
+#         returns -> [1, 4, 10, 15]
+#
+# sequences of successive frame numbers:
+#     expandseq(["1-4", "10-15"])
+#         returns -> [1, 2, 3, 4, 10, 11, 12, 13, 14, 15]
+#
+# sequences of skipped frame numbers:
+#     expandseq(["1-10x2", "20-60x10"])
+#         returns -> [1, 3, 5, 7, 9, 20, 30, 40, 50, 60]
+#
+# reverse sequences work too:
+#     expandseq(["5-1"])
+#         returns -> [5, 4, 3, 2, 1]
+#
+# as do negative numbers:
+#     expandseq(["-10--3"])
+#         returns -> [-10, -9, -8, -7, -6, -5, -4, -3]
 #
 # These formats may be listed in any order, but if a number has
-# been listed once, it will not be listed again.
-#
-# Eg. ["0-16x8", "0-16x2"]
-#     yeilds -> [0, 8, 16, 2, 4, 6, 10, 12, 14]
+# been listed once, it will not be listed again. For example:
+#     expandseq(["0-16x8", "0-16x2"])
+#         returns -> [0, 8, 16, 2, 4, 6, 10, 12, 14]
 #
 # Anything that is not of the above format is ignored for
 # the purposes of building the list of integers and the ignored
 # item is appended to the optional argument "nonSeqList".
 #
+# The returned list of integers is NOT sorted.
+#
 # New as of v1.2.0: Strings containing whitespace (and/or commas)
 # will be split into multiple list entries, and processed as
 # described above.
-#
-# The returned list of integers is NOT sorted.
 #
 def expandSeq(seqList, nonSeqList=[]) :
 
