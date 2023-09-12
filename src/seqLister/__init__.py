@@ -74,7 +74,8 @@
 # 
 # Reverse order on threes: 20-10x3
 #     representing the numbers 20, 17, 14, 11
-# 
+
+
 # MAJOR version for incompatible API changes
 # MINOR version for added functionality in a backwards compatible manner
 # PATCH version for backwards compatible bug fixes
@@ -85,8 +86,8 @@ __version__ = "1.2.0"
 #
 # 'seqList' may be a single string or int, or a list of ints
 # and/or strings. The strings must contain Frame-Ranges
-# (syntax described above). If a string contains more than
-# one Frame-Range they must be separated by whitespace or a comma.
+# (syntax described above). If a string contains more than one
+# Frame-Range they must be separated by whitespace and/or commas.
 #
 # Examples,
 #
