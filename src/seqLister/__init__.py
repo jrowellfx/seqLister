@@ -42,7 +42,7 @@
 #
 # Given that 'A', 'B' and 'N' are integers, the syntax
 # for specifying an integer sequence used to describe
-# a frame-ranges is one of the following three cases:
+# frame-ranges is one of the following three cases:
 #
 #    'A'     just the integer A.
 #
@@ -55,6 +55,25 @@
 # The above three cases may often be combined to describe 
 # less regular lists of Frame-Ranges by concatenating one
 # Frame-Range after another separated by spaces or commas.
+#
+# Examples:
+
+Individual numbers: 1, 4, 10, 15
+
+Ranges of numbers: 1-4, 10-15,
+    representing the numbers 1, 2, 3, 4, 10, 11, 12, 13, 14, 15
+
+Ranges of skipped numbers: 1-10x2, 20-60x10
+    representing the numbers 1, 3, 5, 7, 9, 20, 30, 40, 50, 60
+
+Range of Negative numbers: -10--8
+    representing the numbers -10, -9, -8
+
+Range in reverse order: 5-1
+    representing the numbers 5, 4, 3, 2, 1
+
+Reverse order on threes: 20-10x3
+    representing the numbers 20, 17, 14, 11
 
 # MAJOR version for incompatible API changes
 # MINOR version for added functionality in a backwards compatible manner

@@ -69,6 +69,7 @@ print(seqLister.expandSeq(["10--10x--2"], badArgs)) # invalid
 print("badArgs: ", badArgs)
 print(seqLister.expandSeq(["1-5", "8-a"], badArgs)) # partially invalid
 print("badArgs: ", badArgs)
+print(seqLister.expandSeq(['20-10x3']))
 
 print("")
 print("Testing condenseSeq()")

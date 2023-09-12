@@ -64,6 +64,7 @@ badArgs:  ['a-b']
 badArgs:  ['10--10x--2']
 [1, 2, 3, 4, 5]
 badArgs:  ['8-a']
+[20, 17, 14, 11]
 
 Testing condenseSeq()
 
