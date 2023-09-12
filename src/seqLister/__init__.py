@@ -57,24 +57,24 @@
 # Frame-Range after another separated by spaces or commas.
 #
 # Examples:
-
-Individual numbers: 1, 4, 10, 15
-
-Ranges of numbers: 1-4, 10-15,
-    representing the numbers 1, 2, 3, 4, 10, 11, 12, 13, 14, 15
-
-Ranges of skipped numbers: 1-10x2, 20-60x10
-    representing the numbers 1, 3, 5, 7, 9, 20, 30, 40, 50, 60
-
-Range of Negative numbers: -10--8
-    representing the numbers -10, -9, -8
-
-Range in reverse order: 5-1
-    representing the numbers 5, 4, 3, 2, 1
-
-Reverse order on threes: 20-10x3
-    representing the numbers 20, 17, 14, 11
-
+# 
+# Individual numbers: 1, 4, 10, 15
+# 
+# Ranges of numbers: 1-4, 10-15,
+#     representing the numbers 1, 2, 3, 4, 10, 11, 12, 13, 14, 15
+# 
+# Ranges of skipped numbers: 1-10x2, 20-60x10
+#     representing the numbers 1, 3, 5, 7, 9, 20, 30, 40, 50, 60
+# 
+# Range of Negative numbers: -10--8
+#     representing the numbers -10, -9, -8
+# 
+# Range in reverse order: 5-1
+#     representing the numbers 5, 4, 3, 2, 1
+# 
+# Reverse order on threes: 20-10x3
+#     representing the numbers 20, 17, 14, 11
+# 
 # MAJOR version for incompatible API changes
 # MINOR version for added functionality in a backwards compatible manner
 # PATCH version for backwards compatible bug fixes
