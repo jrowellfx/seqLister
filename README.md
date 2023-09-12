@@ -84,7 +84,7 @@ been listed once, it will not be listed again. For example:
 - expandSeq(["0-16x8", "0-16x2"])  
 returns -> [0, 8, 16, 2, 4, 6, 10, 12, 14]
 
-Anything that is not of the above format is ignored for
+Anything that is not a `Frame-Range` is ignored for
 the purposes of building the list of integers and the ignored
 item is appended to the optional argument `nonSeqList`.
 
