@@ -62,7 +62,7 @@
 #
 __version__ = "1.2.0"
 
-# expandseq() - Expands the argument 'seqList' into a list of integers.
+# expandSeq() - Expands the argument 'seqList' into a list of integers.
 #
 # 'seqList' may be a single string or int, or a list of ints
 # and/or strings. The strings must contain Frame-Ranges
@@ -72,28 +72,28 @@ __version__ = "1.2.0"
 # Examples,
 #
 # individual frame numbers:
-#     expandseq([1, "4", 10, 15])
+#     expandSeq([1, "4", 10, 15])
 #         returns -> [1, 4, 10, 15]
 #
 # sequences of successive frame numbers:
-#     expandseq(["1-4", "10-15"])
+#     expandSeq(["1-4", "10-15"])
 #         returns -> [1, 2, 3, 4, 10, 11, 12, 13, 14, 15]
 #
 # sequences of skipped frame numbers:
-#     expandseq(["1-10x2", "20-60x10"])
+#     expandSeq(["1-10x2", "20-60x10"])
 #         returns -> [1, 3, 5, 7, 9, 20, 30, 40, 50, 60]
 #
 # reverse sequences work too:
-#     expandseq(["5-1"])
+#     expandSeq(["5-1"])
 #         returns -> [5, 4, 3, 2, 1]
 #
 # as do negative numbers:
-#     expandseq(["-10--3"])
+#     expandSeq(["-10--3"])
 #         returns -> [-10, -9, -8, -7, -6, -5, -4, -3]
 #
 # These formats may be listed in any order, but if a number has
 # been listed once, it will not be listed again. For example:
-#     expandseq(["0-16x8", "0-16x2"])
+#     expandSeq(["0-16x8", "0-16x2"])
 #         returns -> [0, 8, 16, 2, 4, 6, 10, 12, 14]
 #
 # Anything that is not of the above format is ignored for
@@ -242,41 +242,57 @@ def __debugPrintList(li) :
     print()
 
 
-# Takes a list of numbers (seqList) which can be a mix of ints
-# and strings. The strings must contain ONLY integers (that is, NO
-# sequence syntax). The list is then condensed into the most minimal
-# form using the notation described in 'expandSeq()' above.
+# condenseSeq() - Takes a list of frames which can be a mix of ints
+# and strings. The strings must contain ONLY integers (that is,
+# NO Frame-Ranges). The list of frames is then condensed into the most
+# succinct list of 'Frame-Ranges' possible to fully describe the 
+# original list of frames.
 #
-# This [2, 1, 3, 7, 8, 4, 5, 6, 9, 10]
-#     returns -> ['1-10']
-# and this [0, 8, 16, 2, 4, 6, 10, 12, 14]
-#     returns -> ['0-16x2']
+# It is possible to zero-pad the returned list of Frame-Ranges
+# with the optional 'pad' argument.
 #
-# condenseSeq() tries to keep runs of condensed frame as
-# long as possible while also trying to keep random smatterings
-# of frame numbers simply as numbers and not strange sequences.
+# Examples:
+#     condenseSeq([2, 1, 3, 7, 8, 4, 5, 6, 9, 10])
+#         returns -> ['1-10']
 #
-# Eg. condenseSeq(expandSeq(["0-100x2", 51]))
-#     returns -> ['0-50x2', '51', '52-100x2']
-# and [1, 5, 13]
-#     returns -> ['1', '5', '13']
+#     condenseSeq([0, 8, 16, 2, 4, 6, 10, 12, 14])
+#         returns -> ['0-16x2']
+#
+# condenseSeq() tries to create Frame-Ranges that cover as long
+# a run of frames as possible while also trying to keep random
+# smatterings of frames numbers simply as single-frames and not
+# strange sequences, for example:
+#
+#     condenseSeq(expandSeq(["0-100x2", 51]))
+#         returns -> ['0-50x2', '51', '52-100x2']
+#
+#     condenseSeq([1, 5, 13])
+#         returns -> ['1', '5', '13']
 #
 # Other examples:
-# [1, 1, 1, 3, 3, 5, 5, 5] -> ['1-5x2']
-# [1, 2, 3, 4, 6, 8, 10] -> ['1-4', '6-10x2']
-# [1, 2, 3, 4, 6, 8] -> ['1-4', '6', '8']
+#     condenseSeq([1, 1, 1, 3, 3, 5, 5, 5])
+#         returns -> ['1-5x2']
 #
-# condenseSeq(expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7",
-#         "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"]))
-#     returns -> ['2-28', '30', '32-36', '38-40', '42', '44-46', '48-50']
+#     condenseSeq([1, 2, 3, 4, 6, 8, 10])
+#         returns -> ['1-4', '6-10x2']
+#
+#     condenseSeq([1, 2, 3, 4, 6, 8])
+#         returns -> ['1-4', '6', '8']
+#
+#     condenseSeq(expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7",
+#             "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"]))
+#         returns -> ['2-28', '30', '32-36', '38-40', '42', '44-46', '48-50']
+#
+#     condenseSeq([97, 98, 99, 100, 101, 102, 103], pad=4)
+#         returns -> ['0097-0103']
+#
+# Any strings passed in that do not contain only frames
+# are ignored and that string is appended to the optional
+# argument "nonSeqList".
 #
 # New as of v1.2.0: Strings containing whitespace (and/or commas)
 # will be split into multiple list entries, and processed as
 # described above.
-#
-# Any strings in seqList that do not contain only integers
-# are ignored and that string is appended to the optional
-# argument "nonSeqList".
 #
 def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 
