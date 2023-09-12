@@ -3,15 +3,16 @@ import seqLister
 badArgs = []
 print("seqLister version: ", seqLister.__version__)
 print("")
-
 print("Testing expandSeq()")
 print("")
-
 print(seqLister.expandSeq(1, badArgs))
+print("badArgs: ", badArgs)
 print(seqLister.expandSeq(1))
 print(seqLister.expandSeq([1, "004", 10, 15], badArgs))
 print("badArgs: ", badArgs)
 print(seqLister.expandSeq([1, "004", 10, 15, "20", "30 35"], badArgs))
+print("badArgs: ", badArgs)
+print(seqLister.expandSeq([1, "004", 10, 15, "20,,  ,  30 35"], badArgs))
 print("badArgs: ", badArgs)
 print(seqLister.expandSeq(["1-4", "010-015"], badArgs))
 print("badArgs: ", badArgs)
@@ -157,3 +158,11 @@ print("badArgs: ", badArgs)
 
 print(seqLister.condenseSeq([-10, -9, -8, -7, -5, -4, -3, -2, -1], 1))
 print(seqLister.condenseSeq(['-10', '-9', '-8', '-7', '-5', '-4', '-3', '-2', '-1']))
+print(seqLister.condenseSeq(['-10, -9', '-8,,  , -7', '-5', '-4 -3', '-2', '-1']))
+
+tmpList = seqLister.expandSeq(["1-10"])
+print(seqLister.condenseSeqOnes(tmpList))
+print(seqLister.condenseSeqOnes([-10, -9, -8, -7, -5, -4, -3, -2, -1, 2, 4, 6, 8, 9], 1))
+print(seqLister.condenseSeqOnes([-10, -9, -8, -7, -5, -4, -3, -2, -1, 2, 4, 6, 8, 9, 10], 1))
+print(seqLister.condenseSeqOnes(['-10', '-9', '-8', '-7', '-5', '-4', '-3', '-2', '-1', '2', '4', '6', '8']))
+print(seqLister.condenseSeqOnes(['-10, -9', '-8,,  , -7', '-5', '-4 -3', -2, '-1', '2', 4, 6, 8]))

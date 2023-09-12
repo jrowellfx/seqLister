@@ -41,7 +41,7 @@
 # MINOR version for added functionality in a backwards compatible manner
 # PATCH version for backwards compatible bug fixes
 #
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 # Expands the argument 'seqList' into a list of integers.
 # 'seqList' may be a single string with the following format
@@ -68,6 +68,10 @@ __version__ = "1.1.1"
 # Anything that is not of the above format is ignored for
 # the purposes of building the list of integers and the ignored
 # item is appended to the optional argument "nonSeqList".
+#
+# New as of v1.2.0: Strings containing whitespace (and/or commas)
+# will be split into multiple list entries, and processed as
+# described above.
 #
 # The returned list of integers is NOT sorted.
 #
@@ -207,30 +211,41 @@ def __debugPrintList(li) :
     print()
 
 
-# Takes a list of numbers and condenses it into the most minimal
+# Takes a list of numbers (seqList) which can be a mix of ints
+# and strings. The strings must contain ONLY integers (that is, NO
+# sequence syntax). The list is then condensed into the most minimal
 # form using the notation described in 'expandSeq()' above.
 #
 # This [2, 1, 3, 7, 8, 4, 5, 6, 9, 10]
-#     yeilds -> ['1-10']
+#     returns -> ['1-10']
 # and this [0, 8, 16, 2, 4, 6, 10, 12, 14]
-#     yeilds -> ['0-16x2']
+#     returns -> ['0-16x2']
 #
-# and it tries to keep runs of condensed frame lists as
+# condenseSeq() tries to keep runs of condensed frame as
 # long as possible while also trying to keep random smatterings
-# of frame numbers, simply as numbers and not strange sequences.
+# of frame numbers simply as numbers and not strange sequences.
 #
 # Eg. condenseSeq(expandSeq(["0-100x2", 51]))
-#     yeilds -> ['0-50x2', '51', '52-100x2']
+#     returns -> ['0-50x2', '51', '52-100x2']
 # and [1, 5, 13]
-#     yeilds -> ['1', '5', '13']
+#     returns -> ['1', '5', '13']
 #
-# and other examples:
+# Other examples:
 # [1, 1, 1, 3, 3, 5, 5, 5] -> ['1-5x2']
 # [1, 2, 3, 4, 6, 8, 10] -> ['1-4', '6-10x2']
 # [1, 2, 3, 4, 6, 8] -> ['1-4', '6', '8']
 #
-# condenseSeq(expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7", "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"]))
-#     yeilds -> ['2-28', '30', '32-36', '38-40', '42', '44-46', '48-50']
+# condenseSeq(expandSeq(["2-50x2", "3-50x3", "5-50x5", "7-50x7",
+#         "11-50x11", "13-50x13", "17-50x17", "19-50x19", "23-50x23"]))
+#     returns -> ['2-28', '30', '32-36', '38-40', '42', '44-46', '48-50']
+#
+# New as of v1.2.0: Strings containing whitespace (and/or commas)
+# will be split into multiple list entries, and processed as
+# described above.
+#
+# Any strings in seqList that do not contain only integers
+# are ignored and that string is appended to the optional
+# argument "nonSeqList".
 #
 def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 
@@ -367,14 +382,15 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 
     return condensedList
 
-# Takes a list of numbers and condenses it into the most minimal
-# form using with the restriction that sequences are compressed
-# to a range (A-B) if and only if the numbers are successive.
+# The same as condenseseq() above, in that it takes a list of numbers
+# and condenses it into the most minimal form with the difference that
+# sequences are compressed to a range (A-B) if and only if the numbers
+# are successive.
 #
 # This [2, 1, 3, 7, 8, 4, 5, 6, 9, 10]
-#     yeilds -> ['1-10']
+#     returns -> ['1-10']
 # and this [0, 8, 16, 2, 4, 6, 10, 12, 14]
-#     yeilds -> [0, 2, 4, 6, 8, 10, 12, 14, 16]
+#     returns -> [0, 2, 4, 6, 8, 10, 12, 14, 16]
 #
 def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
 
