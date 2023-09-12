@@ -429,15 +429,19 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 
     return condensedList
 
-# The same as condenseseq() above, in that it takes a list of numbers
-# and condenses it into the most minimal form with the difference that
-# sequences are compressed to a range (A-B) if and only if the numbers
-# are successive.
+# The same as condenseseq() above, in that it takes a list of frames
+# and condenses it into the most succinct set of Frame-Ranges with
+# the difference that sequences are compressed to a range (A-B) if
+# and only if the numbers are successive. For example,
 #
-# This [2, 1, 3, 7, 8, 4, 5, 6, 9, 10]
-#     returns -> ['1-10']
-# and this [0, 8, 16, 2, 4, 6, 10, 12, 14]
-#     returns -> [0, 2, 4, 6, 8, 10, 12, 14, 16]
+#     condenseSeqOnes([2, 1, 3, 7, 8, 4, 5, 6, 9, 10])
+#         returns -> ['1-10']
+#
+#     condenseSeqOnes([0, 8, 16, 2, 4, 6, 10, 12, 14])
+#         returns -> ['0', '2', '4', '6', '8', '10', '12', '14', '16']
+#
+#     condenseSeqOnes([0, 8, 16, 2, 4, 6, 10, 12, 13, 14])
+#         returns -> ['0', '2', '4', '6', '8', '10', '12-14', '16']
 #
 def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
 
