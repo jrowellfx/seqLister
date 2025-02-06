@@ -43,7 +43,9 @@ Frame-Range after another separated by spaces or commas.
 
 ## How to install the seqLister module on your system.
 
-python3 -m pip install seqLister
+```
+python3 -m pip install seqLister --upgrade
+```
 
 ## Libary functions
 
