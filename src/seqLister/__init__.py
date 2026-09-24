@@ -80,7 +80,7 @@
 # MINOR version for added functionality in a backwards compatible manner
 # PATCH version for backwards compatible bug fixes
 #
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 # expandSeq() - Expands the argument 'seqList' into a list of integers.
 #
@@ -126,9 +126,18 @@ __version__ = "1.2.0"
 # will be split into multiple list entries, and processed as
 # described above.
 #
-def expandSeq(seqList, nonSeqList=[]) :
+# Fixed as of v1.2.1: A Frame-Range with an explicit "xN" step,
+# followed in the same string by a Frame-Range with no step of its
+# own, could incorrectly inherit the earlier step instead of
+# defaulting to a step of 1. Each Frame-Range's step is now
+# resolved independently, as intended.
+#
+def expandSeq(seqList, nonSeqList=None) :
 
-    nonSeqList.clear()
+    if nonSeqList is None :
+        nonSeqList = []
+    else :
+        nonSeqList.clear()
 
     if not isinstance(seqList, list) :
         tmp=seqList
@@ -147,8 +156,6 @@ def expandSeq(seqList, nonSeqList=[]) :
                 resultList.append(seqItem)
             continue
 
-        stepValue = 1
-
         # Turn any embedded commas and tabs into spaces.
         # Then split the seqItem into separate items if containing
         # spaces which allows, for a looser interpretation of
@@ -161,6 +168,12 @@ def expandSeq(seqList, nonSeqList=[]) :
         splitSeqItem = seqItem.split() # Treats consecutive whitespace as one separator.
 
         for seqItem in splitSeqItem :
+
+            # Must reset for EACH token: a token with no explicit "xN" step
+            # defaults to a step of 1, regardless of what a prior token
+            # in this same (space/comma-separated) string used.
+            #
+            stepValue = 1
 
             # No stepping by negative numbers - step back by reversing start/end
             # This next step is equivalent to taking the absolute value of "x"
@@ -314,11 +327,14 @@ def __debugPrintList(li) :
 # will be split into multiple list entries, and processed as
 # described above.
 #
-def condenseSeq(seqList, pad=1, nonSeqList=[]) :
+def condenseSeq(seqList, pad=1, nonSeqList=None) :
 
     condensedList = []
 
-    nonSeqList.clear()
+    if nonSeqList is None :
+        nonSeqList = []
+    else :
+        nonSeqList.clear()
 
     # Turn seqList into all integers and stash invalid entries
     #
@@ -449,7 +465,7 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 
     return condensedList
 
-# The same as condenseseq() above, in that it takes a list of frames
+# The same as condenseSeq() above, in that it takes a list of frames
 # and condenses it into the most succinct set of Frame-Ranges with
 # the difference that sequences are compressed to a range (A-B) if
 # and only if the numbers are successive. For example,
@@ -463,11 +479,14 @@ def condenseSeq(seqList, pad=1, nonSeqList=[]) :
 #     condenseSeqOnes([0, 8, 16, 2, 4, 6, 10, 12, 13, 14])
 #         returns -> ['0', '2', '4', '6', '8', '10', '12-14', '16']
 #
-def condenseSeqOnes(seqList, pad=1, nonSeqList=[]) :
+def condenseSeqOnes(seqList, pad=1, nonSeqList=None) :
 
     condensedList = []
 
-    nonSeqList.clear()
+    if nonSeqList is None :
+        nonSeqList = []
+    else :
+        nonSeqList.clear()
 
     # Turn seqList into all integers and stash invalid entries
     #

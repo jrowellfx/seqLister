@@ -96,6 +96,14 @@ New as of `v1.2.0`: Strings containing whitespace (and/or commas)
 will be split into multiple list entries, and processed as
 described above.
 
+Fixed as of `v1.2.1`: a Frame-Range with an explicit `xN` step,
+followed in the same string by a Frame-Range with no step of its
+own, could incorrectly inherit the earlier step instead of
+defaulting to a step of 1 (e.g. `expandSeq("1-10x2 20-25")` used to
+wrongly return `[1, 3, 5, 7, 9, 20, 22, 24]` instead of
+`[1, 3, 5, 7, 9, 20, 21, 22, 23, 24, 25]`). Each Frame-Range's step
+is now resolved independently, as intended.
+
 ### condenseSeq(seqList, pad=1, nonSeqList=[])
 
 Takes a list of frames which can be a mix of ints

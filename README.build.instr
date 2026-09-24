@@ -1,23 +1,34 @@
-# First, test any changes.
+# =====================================================================
+# PHASE 1 -- Day-to-day dev / editing loop
+# =====================================================================
+#
+# One-time setup of a dev venv. Uses an editable install so that
+# edits to src/seqLister/__init__.py take effect immediately, with
+# no need to reinstall after every change.
 #
 cd <dirWithGitRepos>/seqLister
 
-python3 -m venv venv_testSeqLister
-source venv_testSeqLister/bin/activate
+python3 -m venv venv_dev
+source venv_dev/bin/activate
 python3 -m pip install --upgrade pip setuptools wheel
-python3 -m pip install --upgrade build
-python3 -m pip install --upgrade twine
 
-pip install .
+pip install -e .
 
+# Now edit src/seqLister/__init__.py, then re-run the tests as often
+# as you like -- no reinstall needed in between edits.
+#
 cd tests
-
 python3 testSeqLister.py > testSeqLister.out.new
 diff testSeqLister.out testSeqLister.out.new
+cd ..
 
-# For testing and code-dev
+# Repeat (edit, test, edit, test) until happy.
 #
-make sure the VERSION is set properly in src/seqLister/__init__.py
+# When you ARE happy: bump the version. There is now only ONE place
+# to do this -- setup.cfg reads it automatically from here, so there
+# is no second number to remember or to get out of sync.
+#
+    Edit __version__ in src/seqLister/__init__.py.
 
     Given a version number MAJOR.MINOR.PATCH, increment the:
 
@@ -25,10 +36,127 @@ make sure the VERSION is set properly in src/seqLister/__init__.py
     MINOR version for added functionality in a backwards compatible manner
     PATCH version for backwards compatible bug fixes
 
-and matching version number in setup.cfg
+deactivate
 
-# THEN once tested and verified passed etc
+# =====================================================================
+# PHASE 2 -- Verify the ACTUAL BUILT ARTIFACT, before it goes anywhere
+# =====================================================================
+#
+# Everything in Phase 1 only ever tested the source tree. This phase
+# builds the real sdist/wheel -- the exact files that twine will
+# upload -- and tests THAT, in a completely fresh venv with nothing
+# carried over from dev. Entirely local. No PyPI involved, test or
+# real, so there is nothing to undo if something's wrong.
+#
+cd <dirWithGitRepos>/seqLister
 
+# Clean out any stale build artifacts from a previous run first.
+#
+rm -rf build dist src/*.egg-info
+
+python3 -m venv venv_verify_build
+source venv_verify_build/bin/activate
+python3 -m pip install --upgrade pip setuptools wheel
+python3 -m pip install --upgrade build
+
+python3 -m build
+
+# ls dist/ to see the version-stamped filenames it produced, e.g.
+#   seqLister-1.2.1-py3-none-any.whl
+#   seqLister-1.2.1.tar.gz
+# The version came from __init__.py automatically -- if it's not
+# what you expect, that's a real problem to fix HERE, not after
+# upload.
+#
+ls dist/
+
+pip install dist/seqLister-*.whl
+
+cd tests
+python3 testSeqLister.py > testSeqLister.out.new
+diff testSeqLister.out testSeqLister.out.new
+cd ..
+
+deactivate
+rm -rf venv_verify_build
+
+# If the diff was clean: this exact wheel is what gets uploaded next.
+# If it wasn't clean: STOP. Fix it, go back to Phase 1, and re-run
+# this whole phase from scratch before touching PyPI at all.
+
+# =====================================================================
+# PHASE 2.5 -- OPTIONAL: rehearse the real upload/download pipeline
+#              on TestPyPI before touching the real index
+# =====================================================================
+#
+# Phase 2 already proved the built artifact installs and passes tests
+# locally. This phase additionally proves the SERVER side works too --
+# catches things a local wheel-install can't, such as the README
+# rendering wrong on the package page, or a stale/misconfigured
+# TestPyPI token. This is a rehearsal, not a requirement -- skip this
+# whole phase on any release where it doesn't feel worth the extra
+# round trip.
+#
+# Uses the dist/ artifacts already built and verified in Phase 2 --
+# does not rebuild.
+#
+cd <dirWithGitRepos>/seqLister
+
+python3 -m venv venv_testpypi
+source venv_testpypi/bin/activate
+python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade twine
+
+# Requires a separate [testpypi] section in ~/.pypirc with its own
+# TestPyPI account/token -- test.pypi.org is a completely separate
+# account system from pypi.org, so a real-PyPI token will NOT work
+# here.
+#
+python3 -m twine upload --repository testpypi dist/seqLister-*
+
+deactivate
+rm -rf venv_testpypi
+
+# Now install FROM TestPyPI itself, in yet another fresh venv, and
+# run the test suite against THAT.
+#
+python3 -m venv venv_verify_testpypi
+source venv_verify_testpypi/bin/activate
+
+# --index-url points pip at TestPyPI instead of the real index.
+# seqLister has no dependencies of its own, so nothing else is needed
+# here. (If a future version ever gains a dependency, add
+# --extra-index-url https://pypi.org/simple/ too -- TestPyPI doesn't
+# mirror real PyPI's packages, so pip won't find a dependency that
+# only exists on the real index otherwise.)
+#
+pip install --index-url https://test.pypi.org/simple/ seqLister==<VERSION>
+
+cd tests
+python3 testSeqLister.py > testSeqLister.out.new
+diff testSeqLister.out testSeqLister.out.new
+cd ..
+
+deactivate
+rm -rf venv_verify_testpypi
+
+# While you're here: open https://test.pypi.org/project/seqLister/
+# in a browser and eyeball that the README rendered correctly. That's
+# the one thing this phase catches that nothing else in this file
+# does.
+#
+# If anything in this phase turned up a problem: unlike real PyPI,
+# TestPyPI releases can just be deleted from the project's page on
+# test.pypi.org, so delete the broken one, fix the issue back in
+# Phase 1/2, and re-run from there. (This is exactly why rehearsing
+# here is worthwhile -- real PyPI does NOT let you re-upload a fixed
+# file under a version number that's already been used, so finding a
+# problem here is cheap; finding the same problem in Phase 3 is not.)
+
+# =====================================================================
+# PHASE 3 -- Release
+# =====================================================================
+#
 cd $HOME
 
 # if next steps not done yet.
@@ -42,14 +170,20 @@ cd $HOME
 
 cd <dirWithGitRepos>/seqLister
 
-python3 -m build
-
-# Change next line to whatever latest version is. Then use
-# __token__ and password for PyPi account.
-# ...or not needed if .pypirc is installed in $HOME
+# dist/ still has the exact files verified in Phase 2 -- upload those,
+# don't rebuild here (rebuilding now would mean uploading something
+# that was never actually tested).
 #
-python3 -m twine upload --repository pypi dist/seqLister-1.1.0*
+# Uses __token__ and password for PyPI account, or picks up
+# credentials automatically if .pypirc is installed in $HOME.
+#
+python3 -m twine upload --repository pypi dist/seqLister-*
 
+# Smoke-test the real, now-public install, same as before -- this is
+# just confirming the install/upgrade mechanics work end to end on
+# this machine, not re-testing the package itself (that already
+# happened, for real, back in Phase 2).
+#
 su -
 cd /usr/local/venv/
 source bin/activate
@@ -58,16 +192,12 @@ deactivate
 bin/pip install --upgrade seqLister
 exit
 
-# Test installation.
-#
 cd /usr/local/venv/
 source bin/activate
-cd <dirWithGitRepos>/seqLister
-cd tests
+cd <dirWithGitRepos>/seqLister/tests
 python3 testSeqLister.py > testSeqLister.out.new
 diff testSeqLister.out testSeqLister.out.new
 
-CHECK IN AN COMMIT ALL CHANGES AND PUSH UP TO GITHUB
+CHECK IN AND COMMIT ALL CHANGES AND PUSH UP TO GITHUB
 
-MAKE NEW RELEASE to match VERSION
-
+MAKE NEW RELEASE ON GITHUB TO MATCH VERSION

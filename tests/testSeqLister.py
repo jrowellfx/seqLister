@@ -25,6 +25,33 @@ print("badArgs: ", badArgs)
 print(seqLister.expandSeq(["1-10x2", "20-60x10"]))
 print(seqLister.expandSeq(["1-10x2", "20-60x10"], badArgs))
 print("badArgs: ", badArgs)
+# Regression tests for the v1.2.1 fix: a Frame-Range with an explicit
+# "xN" step, followed in the SAME STRING by Frame-Range(s) with no
+# step of their own, must NOT inherit the earlier step -- each
+# Frame-Range's step must default back to 1 independently. Prior to
+# v1.2.1 these incorrectly returned [1, 3, 5, 7, 9, 20, 22, 24] and
+# [1, 6, 11, 16, 30, 40] respectively.
+#
+print(seqLister.expandSeq("1-10x2 20-25", badArgs))
+print("badArgs: ", badArgs)
+print(seqLister.expandSeq("1-20x5 30-33 40-43", badArgs))
+print("badArgs: ", badArgs)
+# Same three Frame-Ranges as immediately above, but passed as
+# separate list items instead of one string -- this ordering already
+# worked correctly even before v1.2.1, so this is here to confirm the
+# fix didn't change behavior for the case that was never broken.
+print(seqLister.expandSeq(["1-20x5", "30-33", "40-43"], badArgs))
+print("badArgs: ", badArgs)
+# Order reversed: an un-stepped range followed by a stepped one. This
+# also already worked correctly before v1.2.1 (the leak only ever ran
+# forward from a stepped range to later un-stepped ones), included
+# here for completeness.
+print(seqLister.expandSeq("30-33 1-20x5", badArgs))
+print("badArgs: ", badArgs)
+# Two DIFFERENT explicit steps back-to-back in the same string --
+# each Frame-Range must pick up its own step, not the one before it.
+print(seqLister.expandSeq("1-10x2 20-40x5", badArgs))
+print("badArgs: ", badArgs)
 print(seqLister.expandSeq(["5-1"], badArgs))
 print("badArgs: ", badArgs)
 print(seqLister.expandSeq("5-1"))
