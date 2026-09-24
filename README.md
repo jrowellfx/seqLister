@@ -4,6 +4,16 @@
 integer-sequences using a simple syntax widely used within
 the VFX-industry for specifying frame-ranges.
 
+## Table of Contents
+
+- [Definition: 'Frame-Range'](#definition-frame-range)
+- [How to install the seqLister module on your system](#how-to-install-the-seqlister-module-on-your-system)
+- [Libary functions](#libary-functions)
+  - [expandSeq()](#expandseq)
+  - [condenseSeq()](#condenseseq)
+  - [condenseSeqOnes()](#condenseseqones)
+- [Used by](#used-by)
+
 ## Definition: 'Frame-Range'.
 
 Given that 'A', 'B' and 'N' are integers, the syntax
@@ -49,7 +59,8 @@ python3 -m pip install seqLister --upgrade
 
 ## Libary functions
 
-### expandSeq(seqList, nonSeqList=[])
+<a name="expandseq"></a>
+### expandSeq(seqList, nonSeqList=None)
 
  Expands the argument `seqList` into a list of integers.
 
@@ -104,7 +115,8 @@ wrongly return `[1, 3, 5, 7, 9, 20, 22, 24]` instead of
 `[1, 3, 5, 7, 9, 20, 21, 22, 23, 24, 25]`). Each Frame-Range's step
 is now resolved independently, as intended.
 
-### condenseSeq(seqList, pad=1, nonSeqList=[])
+<a name="condenseseq"></a>
+### condenseSeq(seqList, pad=1, nonSeqList=None)
 
 Takes a list of frames which can be a mix of ints
 and strings. The strings must contain ONLY integers (that is,
@@ -158,7 +170,8 @@ New as of `v1.2.0`: Strings containing whitespace (and/or commas)
 will be split into multiple list entries, and processed as
 described above.
 
-### condenseSeqOnes(seqList, pad=1, nonSeqList=[])
+<a name="condenseseqones"></a>
+### condenseSeqOnes(seqList, pad=1, nonSeqList=None)
 
 The same as `condenseSeq()` above, in that it takes a list of frames
 and condenses it into the most succinct set of Frame-Ranges with
@@ -173,3 +186,30 @@ returns -> ['0', '2', '4', '6', '8', '10', '12', '14', '16']
 
 - condenseSeqOnes([0, 8, 16, 2, 4, 6, 10, 12, 13, 14])  
 returns -> ['0', '2', '4', '6', '8', '10', '12-14', '16']
+
+## Used by
+
+`seqLister` is the shared engine behind a small family of
+VFX-industry command-line tools, all built around the Frame-Range
+syntax described above:
+
+- [`lsseq`](https://github.com/jrowellfx/lsseq) -- lists image
+  sequences on disk. The main sequence range itself is always a
+  plain `A-B` range, by lsseq's own native-format rules, but lsseq
+  uses this library's `condenseSeq()` to build the compact lists
+  shown for the various *error* frames it reports (zero-length
+  files, missing frames, and the like).
+- [`renumseq`](https://github.com/jrowellfx/renumSeq) -- renumbers
+  and renames image sequences. It reads a SEQ argument in lsseq's
+  native format -- again, always a plain `A-B` range -- and uses
+  this library's `expandSeq()` to turn that range into the actual
+  list of frame numbers it renumbers one by one.
+- [`expandSeq`](https://github.com/jrowellfx/expandSeq) -- a
+  command-line wrapper directly around this library's own
+  `expandSeq()` function
+- [`condenseSeq`](https://github.com/jrowellfx/expandSeq) -- a
+  command-line wrapper directly around this library's own
+  `condenseSeq()` function
+
+If you're evaluating whether `seqLister` fits your own project, any
+of the above is a working, real-world example of the library in use.

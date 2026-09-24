@@ -50,9 +50,11 @@ deactivate
 #
 cd <dirWithGitRepos>/seqLister
 
-# Clean out any stale build artifacts from a previous run first.
+# Clean out scratch build artifacts from any previous run. NOT
+# touching dist/ itself -- if you keep every released version's
+# files checked in there for history, this leaves that intact.
 #
-rm -rf build dist src/*.egg-info
+rm -rf build src/*.egg-info
 
 python3 -m venv venv_verify_build
 source venv_verify_build/bin/activate
@@ -70,7 +72,15 @@ python3 -m build
 #
 ls dist/
 
-pip install dist/seqLister-*.whl
+# Install the SPECIFIC new wheel by name, not a "seqLister-*.whl"
+# glob -- if dist/ has past versions sitting in it too (kept for
+# history), that glob matches ALL of them, and pip refuses to install
+# any of them at all ("ResolutionImpossible", since they're all the
+# same package at conflicting versions). Confirmed this is a hard
+# failure, not just untidy output -- so this has to name the one file
+# you actually mean.
+#
+pip install dist/seqLister-<VERSION>-py3-none-any.whl
 
 cd tests
 python3 testSeqLister.py > testSeqLister.out.new
@@ -112,7 +122,14 @@ python3 -m pip install --upgrade twine
 # account system from pypi.org, so a real-PyPI token will NOT work
 # here.
 #
-python3 -m twine upload --repository testpypi dist/seqLister-*
+# --skip-existing tells twine to silently skip any file the index
+# already has, rather than erroring out -- needed because dist/ keeps
+# every past release's files, and PyPI/TestPyPI both hard-reject
+# re-uploading a filename that already exists. The <VERSION>* glob
+# additionally scopes this to just the new release's two files
+# (the .whl and the .tar.gz), not history sitting alongside them.
+#
+python3 -m twine upload --skip-existing --repository testpypi dist/seqLister-<VERSION>*
 
 deactivate
 rm -rf venv_testpypi
@@ -172,12 +189,14 @@ cd <dirWithGitRepos>/seqLister
 
 # dist/ still has the exact files verified in Phase 2 -- upload those,
 # don't rebuild here (rebuilding now would mean uploading something
-# that was never actually tested).
+# that was never actually tested). --skip-existing and the
+# <VERSION>* scoping are the same fix as in Phase 2.5, and matter
+# for the same reason: dist/ has every past release sitting in it too.
 #
 # Uses __token__ and password for PyPI account, or picks up
 # credentials automatically if .pypirc is installed in $HOME.
 #
-python3 -m twine upload --repository pypi dist/seqLister-*
+python3 -m twine upload --skip-existing --repository pypi dist/seqLister-<VERSION>*
 
 # Smoke-test the real, now-public install, same as before -- this is
 # just confirming the install/upgrade mechanics work end to end on
