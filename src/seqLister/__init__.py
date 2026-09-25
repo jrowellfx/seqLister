@@ -136,6 +136,11 @@ def expandSeq(seqList, nonSeqList=None) :
 
     if nonSeqList is None :
         nonSeqList = []
+    elif not (hasattr(nonSeqList, "clear") and hasattr(nonSeqList, "append")) :
+        raise TypeError(
+            "nonSeqList must be a list (or a list-like object supporting "
+            ".clear() and .append()), got {0}".format(type(nonSeqList).__name__)
+        )
     else :
         nonSeqList.clear()
 
@@ -333,6 +338,11 @@ def condenseSeq(seqList, pad=1, nonSeqList=None) :
 
     if nonSeqList is None :
         nonSeqList = []
+    elif not (hasattr(nonSeqList, "clear") and hasattr(nonSeqList, "append")) :
+        raise TypeError(
+            "nonSeqList must be a list (or a list-like object supporting "
+            ".clear() and .append()), got {0}".format(type(nonSeqList).__name__)
+        )
     else :
         nonSeqList.clear()
 
@@ -485,6 +495,11 @@ def condenseSeqOnes(seqList, pad=1, nonSeqList=None) :
 
     if nonSeqList is None :
         nonSeqList = []
+    elif not (hasattr(nonSeqList, "clear") and hasattr(nonSeqList, "append")) :
+        raise TypeError(
+            "nonSeqList must be a list (or a list-like object supporting "
+            ".clear() and .append()), got {0}".format(type(nonSeqList).__name__)
+        )
     else :
         nonSeqList.clear()
 

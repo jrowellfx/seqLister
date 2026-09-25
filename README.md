@@ -69,6 +69,13 @@ and/or strings. The strings must contain Frame-Ranges
 (syntax described above). If a string contains more than one
 Frame-Range they must be separated by whitespace and/or commas.
 
+Anything that is not a `Frame-Range` is ignored for the purposes
+of building the list of integers, and the ignored item is
+appended to the optional *list* argument `nonSeqList`, if one was
+supplied. If supplied, `nonSeqList` must be a list (or a
+list-like object supporting `.clear()` and `.append()`);
+passing anything else raises `TypeError`.
+
 #### Examples,
 
 - individual frame numbers:
@@ -97,10 +104,6 @@ been listed once, it will not be listed again. For example:
 - expandSeq(["0-16x8", "0-16x2"])  
 returns -> [0, 8, 16, 2, 4, 6, 10, 12, 14]
 
-Anything that is not a `Frame-Range` is ignored for
-the purposes of building the list of integers and the ignored
-item is appended to the optional argument `nonSeqList`.
-
 The returned list of integers is *NOT* sorted.
 
 New as of `v1.2.0`: Strings containing whitespace (and/or commas)
@@ -126,6 +129,12 @@ original list of frames.
 
 It is possible to zero-pad the returned list of Frame-Ranges
 with the optional 'pad' argument.
+
+Any strings passed in that do not contain only frames are ignored,
+and that string is appended to the optional *list* argument
+`nonSeqList`, if one was supplied. If supplied, `nonSeqList` must
+be a list (or a list-like object supporting `.clear()` and
+`.append()`); passing anything else raises `TypeError`.
 
 #### Examples:
 - condenseSeq([2, 1, 3, 7, 8, 4, 5, 6, 9, 10])  
@@ -161,10 +170,6 @@ returns -> ['2-28', '30', '32-36', '38-40', '42', '44-46', '48-50']
 
 - condenseSeq([97, 98, 99, 100, 101, 102, 103], pad=4)  
 returns -> ['0097-0103']
-
-Any strings passed in that do not contain only frames
-are ignored and that string is appended to the optional
-argument `nonSeqList`.
 
 New as of `v1.2.0`: Strings containing whitespace (and/or commas)
 will be split into multiple list entries, and processed as
