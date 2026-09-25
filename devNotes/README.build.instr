@@ -64,15 +64,15 @@ python3 -m pip install --upgrade build
 python3 -m build
 
 # ls dist/ to see the version-stamped filenames it produced, e.g.
-#   seqLister-1.2.1-py3-none-any.whl
-#   seqLister-1.2.1.tar.gz
+#   seqlister-1.2.1-py3-none-any.whl
+#   seqlister-1.2.1.tar.gz
 # The version came from __init__.py automatically -- if it's not
 # what you expect, that's a real problem to fix HERE, not after
 # upload.
 #
 ls dist/
 
-# Install the SPECIFIC new wheel by name, not a "seqLister-*.whl"
+# Install the SPECIFIC new wheel by name, not a "seqlister-*.whl"
 # glob -- if dist/ has past versions sitting in it too (kept for
 # history), that glob matches ALL of them, and pip refuses to install
 # any of them at all ("ResolutionImpossible", since they're all the
@@ -80,7 +80,7 @@ ls dist/
 # failure, not just untidy output -- so this has to name the one file
 # you actually mean.
 #
-pip install dist/seqLister-<VERSION>-py3-none-any.whl
+pip install dist/seqlister-<VERSION>-py3-none-any.whl
 
 cd tests
 python3 testSeqLister.py > testSeqLister.out.new
@@ -129,7 +129,7 @@ python3 -m pip install --upgrade twine
 # additionally scopes this to just the new release's two files
 # (the .whl and the .tar.gz), not history sitting alongside them.
 #
-python3 -m twine upload --skip-existing --repository testpypi dist/seqLister-<VERSION>*
+python3 -m twine upload --skip-existing --repository testpypi dist/seqlister-<VERSION>*
 
 deactivate
 rm -rf venv_testpypi
@@ -196,7 +196,7 @@ cd <dirWithGitRepos>/seqLister
 # Uses __token__ and password for PyPI account, or picks up
 # credentials automatically if .pypirc is installed in $HOME.
 #
-python3 -m twine upload --skip-existing --repository pypi dist/seqLister-<VERSION>*
+python3 -m twine upload --skip-existing --repository pypi dist/seqlister-<VERSION>*
 
 # Smoke-test the real, now-public install, same as before -- this is
 # just confirming the install/upgrade mechanics work end to end on
